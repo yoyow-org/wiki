@@ -80,7 +80,7 @@ The node then will download blocks from the p2p network. When it's done (in sync
 ### First Run
 Start another `screen` session, run `yoyow_client` inside:
 ```
-Screen -S yoyow_node
+Screen -S yoyow_client
 ./yoyow_client -s ws://127.0.0.1:8090/ -H 127.0.0.1:8091
 ```
 
