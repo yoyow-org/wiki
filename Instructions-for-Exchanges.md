@@ -26,7 +26,7 @@ sudo apt-get -y install ntp
 
 Register an account with https://wallet.yoyow.org. Instruction is [here](https://steemit.com/cn/@peterchen145/yoyow-online-wallet-sign-up-tutorial). Save your account ID number for later use.
 
-Get the private keys of your account. We'll need 3 keys for integration:
+Get the private keys of your account. Instruction is [here](https://steemit.com/cn/@peterchen145/yoyow-keys-tutorial-yoyow). We'll need 3 keys for integration:
 * Active key: for transferring funds out
 * Secondary key: for collecting points to pay fees
 * Memo key: for encrypting/decrypting memos
