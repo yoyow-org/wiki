@@ -75,6 +75,8 @@ The node then will download blocks from the p2p network. When it's done (in sync
 792527ms th_a       application.cpp:574           handle_block         ] Got block: #355798 00056dd613f39f1ad6c0c3fdb00a56c60f44ab1c time: 2017-09-18T19:13:12 latency: 526 ms from: 499381505/yoyo499381505  irreversible: 355788 (-10)
 ```
 
+If need to terminate the node, press Ctrl+C, or send SIGINT or SIGTERM signal to the process, then wait for a while, the node will stop by itself.
+
 ## Start YOYOW Client
 
 ### First Run
@@ -247,6 +249,10 @@ Note:
 * If you have some YOYO in your account, it will accumulate points as time goes by. The accumulation speed has a linear relationship with account balance. Usually for exchanges the accumulated points should be enough to pay transaction fees.
 * Points need to be collected before can be used to pay transaction fees, so we have this command.
 * Although funds in balance can be used to pay transaction fees as well in the back end, current implementation of `yoyow_client` will only try to pay fees with points (except raw-transaction signing). If you don't have enough points in the account, most commands will fail. So it's important to keep a certain amount of points in the account.
+
+### How to Close
+
+Press Ctrl+D if the client is running in Ubuntu.
 
 ## Access the Client via HTTP-RPC
 
