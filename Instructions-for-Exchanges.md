@@ -61,13 +61,13 @@ sudo apt-get -y install screen
 Start the node inside `screen`:
 ```
 screen -S yoyow_node
-./yoyow_node --rpc-endpoint 127.0.0.1:8090 --replay-blockchain
+./yoyow_node --rpc-endpoint 127.0.0.1:8090
 ```
 
 Note:
 1. Start the node with `--rpc-endpoint` so we can interact with it via RPC call. In the example the node will listen on address `127.0.0.1` and port `8090`.
 2. There is a `--track-account` option ported from BitShares, which is useful for exchanges, but it's now broken in YOYOW. It will be fixed in the future. With this option, the node will use less RAM. Anyway, in the beginning, the node won't use much RAM even without that option.
-3. There is a bug which causes syncing issues if the node is not started with `--replay-blockchain` option, so we need to start with that option as a temporary workaround. We're looking into the issue. After it's fixed, no need to start with this option every time.
+3. The syncing bug has been fixed in version `v0.1.2-171026`, no longer need to start the node with `--replay-blockchain` option every time.
 
 The node then will download blocks from the p2p network. When it's done (in sync), in the console there will be new messages showing every 3 seconds, like these:
 ```
