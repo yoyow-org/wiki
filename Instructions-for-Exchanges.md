@@ -255,7 +255,7 @@ Press Ctrl+D if the client is running in Ubuntu.
 When HTTP-RPC is enabled, we can access the client via HTTP-RPC call. All commands are usable. For example:
 ```
 curl -d '{"jsonrpc": "2.0", "method": "info", "params": [], "id": 1}' http://127.0.0.1:8091/rpc
-curl -d '{"jsonrpc": "2.0", "method": "transfer", "params": [123456789,123456789,1,"YOYO",null,true], "id": 1}' http://127.0.0.1:8091/rpc
+curl -d '{"jsonrpc": "2.0", "method": "transfer", "params": [123456789,123456789,"1","YOYO",null,true], "id": 1}' http://127.0.0.1:8091/rpc
 curl -d '{"jsonrpc": "2.0", "method": "get_relative_account_history", "params": [123456789,0,1,10,10], "id": 1}' http://127.0.0.1:8091/rpc
 ```
 
