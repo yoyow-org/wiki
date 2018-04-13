@@ -193,11 +193,11 @@ Note: the "statistics" data is useful for integration.
 
 We can use the `transfer` command to transfer funds. The syntax is:
 ```
-transfer [from] [to] [amount] YOYO [broadcast]
+transfer [from] [to] [amount] YOYO [memo] [broadcast]
 ```
 For example:
 ```
-unlocked >>> transfer 123456789 987654321 1.2345 YOYO true
+unlocked >>> transfer 123456789 987654321 1.2345 YOYO "thisismemo" true
 ```
 
 Note:
