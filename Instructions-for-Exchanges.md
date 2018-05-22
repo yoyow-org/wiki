@@ -62,8 +62,28 @@ screen -S yoyow_node
 
 Note:
 1. Start the node with `--rpc-endpoint` so we can interact with it via RPC call. In the example the node will listen on address `127.0.0.1` and port `8090`.
-2. There is a `--track-account` option ported from BitShares, which is useful for exchanges, but it's now broken in YOYOW. It will be fixed in the future. With this option, the node will use less RAM. Anyway, in the beginning, the node won't use much RAM even without that option.
-3. The syncing bug has been fixed in version `v0.1.2-171026`, no longer need to start the node with `--replay-blockchain` option every time.
+2. The following parameters indicate how many history records are kept for each account. The default value is 1000. For exchanges, if there are more recharge and withdrawal records, consider setting a larger value, such as:
+```
+max-ops-per-account = 1000
+```
+modify to 
+```
+max-ops-per-account = 1000000
+```
+It will retain one million data. Earlier data is deleted from memory and cannot be queried quickly (but still recorded on the chain).
+
+3. The following two parameters will greatly reduce the memory required for the operation, the principle is not to save the historical data index that is not related to the exchange account.
+```
+track-account = [25638]
+partial-operations = true
+```
+Please replace "25638" with the account ID you need. Note: The default track-account in config.ini has a "#" symbol and needs to be deleted.
+If you need to monitor multiple accounts, use the following configuration:
+```
+track-account = [25638,25997]
+partial-operations = true
+```
+
 
 The node then will download blocks from the p2p network. When it's done (in sync), in the console there will be new messages showing every 3 seconds, like these:
 ```
