@@ -62,7 +62,7 @@ screen -S yoyow_node
 
 Note:
 1. Start the node with `--rpc-endpoint` so we can interact with it via RPC call. In the example the node will listen on address `127.0.0.1` and port `8090`.
-2. The following parameters indicate how many history records are kept for each account. The default value is 1000. For exchanges, if there are more recharge and withdrawal records, consider setting a larger value, such as:
+2. The following parameters indicate how many history records are kept for each account. The default value is 1000. For exchanges, if there are more recharge and withdrawal records, consider setting a larger value, e.g.:
 ```
 max-ops-per-account = 1000
 ```
