@@ -3267,52 +3267,52 @@ WebSocket:
 ::
 
     wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "create_asset", ["250926091", "WOWO", 4, {}, true]]}
+    {"id":1, "method":"call", "params":[0, "create_asset", ["250926091", "ZOZO", 4, {"max_supply":300000,}, true]]}
 
 JSON-RPC:
 ::
 
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "update_committee_account", ["250926091","10000", "YOYO", null, true]], "id": 1}' http://localhost:8091/rpc
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "create_asset", ["250926091","ZOZO", 4, {"max_supply":300000,}, true]], "id": 1}' http://localhost:8091/rpc
 
 
 返回结果
 """"""""""""""""
 ::
 
-  {
-    "ref_block_num": 53840,
-    "ref_block_prefix": 866309011,
-    "expiration": "2018-05-03T07:37:45",
-    "operations": [[
-        25,{
-          "fee": {
-            "total": {
-              "amount": "30000000000",
-              "asset_id": 0
+    {
+      "ref_block_num": 5023,
+      "ref_block_prefix": 1223221831,
+      "expiration": "2018-05-24T09:04:54",
+      "operations": [[
+          25,{
+            "fee": {
+              "total": {
+                "amount": "30000000000",
+                "asset_id": 0
+              }
+            },
+            "issuer": 223331844,
+            "symbol": "ZOZO",
+            "precision": 4,
+            "common_options": {
+              "max_supply": 300000,
+              "market_fee_percent": 0,
+              "max_market_fee": "1000000000000000",
+              "issuer_permissions": 79,
+              "flags": 0,
+              "whitelist_authorities": [],
+              "blacklist_authorities": [],
+              "whitelist_markets": [],
+              "blacklist_markets": [],
+              "description": ""
             }
-          },
-          "issuer": 223331844,
-          "symbol": "WOWO",
-          "precision": 4,
-          "common_options": {
-            "max_supply": "1000000000000000",
-            "market_fee_percent": 0,
-            "max_market_fee": "1000000000000000",
-            "issuer_permissions": 79,
-            "flags": 0,
-            "whitelist_authorities": [],
-            "blacklist_authorities": [],
-            "whitelist_markets": [],
-            "blacklist_markets": [],
-            "description": ""
           }
-        }
+        ]
+      ],
+      "signatures": [
+         "2028f6563dbf6c570d3aa29154963f7ed55649a8e9ebf86d9464c031d8ddce9fac683a71af40142559939ee711648ee730c65bcefb8b3328e0b16d3029584e4c24"
       ]
-    ],
-    "signatures": [
-      "202bc67d4d5c95deeb7ea47713d84515e880f88a9851fa4c1e657a28f635fcce840bdd0b43899a443f01b7bb1cbb3d46936210e5d008da96400b2ef9cf6385ec04"
-    ]
-  }
+    }
 
 
 2.4.18 get_asset
