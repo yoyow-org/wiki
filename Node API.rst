@@ -247,7 +247,7 @@ JSON-RPC:
 1.1.3 get_account_balances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 根据 uid和资产类型查询资产余额。
-当前资产只有核心资产YOYO，asset_id=0
+
 
 支持格式
 """"""""""""""""
@@ -268,7 +268,7 @@ WebSocket; JSON-RPC
 """"""""""""""""
 
 :uid:   uid，例如:"250926091"
-:assets:    资产种类id的列表,0代表核心资产。例如：[0,1]
+:assets:    资产种类id的列表,0代表核心资产。例如：[0,1]。如果该值为空([]) 则返回该账户里的所有资产余额
 
 注意事项
 """"""""""""""""
@@ -312,7 +312,7 @@ JSON-RPC:
 
 1.1.4 get_post
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据平台所有者id 、发帖者 uid 、帖子 pid 返回帖子信息。
+根据平台所有者 uid 、发帖者 uid 、帖子 pid 返回帖子信息。
 
 支持格式
 """"""""""""""""
@@ -380,7 +380,7 @@ JSON-RPC:
 
 1.1.5 get_posts_by_platform_poster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据平台所有者id 、 发帖者 uid 、发帖时间段 查询帖子列表。
+根据平台所有者 uid 、 发帖者 uid 、发帖时间段 查询帖子列表。
 
 支持格式
 """"""""""""""""
@@ -450,76 +450,7 @@ JSON-RPC:
 
 
 
-1.1.6 get_required_fee_pairs
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-给定一组操作，返回操作需要的手续费信息。
-
-该 API 只支持核心资产。
-
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-
-
-访问授权限制
-""""""""""""""""""
-无
-
-
-请求参数
-""""""""""""""""
-
-:ops:   uid数组，长度小于1000 例如：["250926091"]
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://47.52.155.181:10011
-    {"id":1, "method":"call", "params":[0, "get_required_fee_pairs", [[[0,{"fee":{"total":{"amount":200000,"asset_id":0},"options":{"from_balance":{"amount":200000,"asset_id":0}}},"from":236542328,"to":228984329,"amount":{"amount":100000,"asset_id":0},"extensions":{"from_balance":{"amount":100000,"asset_id":0},"to_balance":{"amount":100000,"asset_id":0}}}]]]]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params": [0, "get_required_fee_pairs", [[[0,{"fee":{"total":{"amount":200000,"asset_id":0},"options":{"from_balance":{"amount":200000,"asset_id":0}}},"from":236542328,"to":228984329,"amount":{"amount":100000,"asset_id":0},"extensions":{"from_balance":{"amount":100000,"asset_id":0},"to_balance":{"amount":100000,"asset_id":0}}}]]]], "id": 1}' http://47.52.155.181:10011/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-    {
-      "id": 1,
-      "jsonrpc": "2.0",
-      "result": [
-        [
-          20000,
-          0
-        ]
-      ]
-    }
-
-
-
-
-返回字段说明
-"""""""""""""""""""""""""""""""""""
-返回类型是 pair 数组， pair 中第一个元素为需要的总费用，单位是核心资产去掉小数点后的值（与 asset 类型用法相同）；
-
-第二个元素是需要的真实费用，可用余额和零钱包支付，不能用币天抵扣，单位同前。
-
-
-1.1.7 get_required_fee_data
+1.1.6 get_required_fee_data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 给定一组操作，返回操作需要的手续费信息。该 API 只支持核心资产。
 
@@ -591,7 +522,7 @@ JSON-RPC:
 
 
 
-1.1.8 get_full_accounts_by_uid
+1.1.7 get_full_accounts_by_uid
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 根据一组账户 uid 获取对应信息。
 
@@ -628,6 +559,10 @@ Options 数组可以有如下参数
     optional fetch_witness_votes;
     optional fetch_committee_member_object;
     optional fetch_committee_member_votes;
+    optional fetch_platform_object;
+    optional fetch_platform_votes;
+    optional fetch_assets;
+    optional fetch_balances;
     }
 
 注意事项
@@ -641,6 +576,8 @@ WebSocket:
 
     wscat -c ws://47.52.155.181:10011
     {"id":1, "method":"call", "params":[0, "get_full_accounts_by_uid", [["250926091"],{}]]}
+
+    {"id":1, "method":"call", "params":[0, "get_full_accounts_by_uid", [["223331844"],{"fetch_assets": true}]]}
 
 JSON-RPC:
 ::
@@ -783,12 +720,17 @@ JSON-RPC:
       witness_votes;             // 见证人投票明细（投出票）
       committee_member;          // 候选理事信息
       committee_member_votes;    // 理事会选举投票明细（投出票）
+      platform;                  // 该账户拥有的平台信息
+      platform_votes;            // 平台投票明细（投出票）
+      assets;                    // 该账户为资产发行人的资产类型 id 清单
+      balances;                  // 余额表
+
    };
 
 
-1.1.9 get_witness_by_account
+1.1.8 get_witness_by_account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-给定一个 uid ，返回对应的见证人信息
+给定一个账户的 uid ，返回对应的见证人信息
 
 支持格式
 """"""""""""""""
@@ -873,7 +815,7 @@ JSON-RPC:
 如果 uid 不存在，则返回 map 中没有相应 uid 。
 
 
-1.1.10 get_witnesses
+1.1.9 get_witnesses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 给定一组 uid ，返回对应的见证人信息
 
@@ -979,7 +921,7 @@ JSON-RPC:
 
 
 
-1.1.11 lookup_witnesses
+1.1.10 lookup_witnesses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 列出当前有效的见证人清单。 
 
@@ -1085,7 +1027,7 @@ JSON-RPC:
 
 
 
-1.1.12 get_committee_member_by_account
+1.1.11 get_committee_member_by_account
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 给定一个 uid ，返回对应的候选理事信息
 
@@ -1152,7 +1094,7 @@ JSON-RPC:
 
 
 
-1.1.13 get_committee_members
+1.1.12 get_committee_members
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 根据一组账户 uid 获取对应信息。
 
@@ -1228,7 +1170,7 @@ JSON-RPC:
 
 
 
-1.1.14 lookup_committee_members
+1.1.13 lookup_committee_members
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 列出当前有效的候选理事清单
 
@@ -1306,7 +1248,7 @@ JSON-RPC:
 
 
 
-1.1.15 list_committee_proposals
+1.1.14 list_committee_proposals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 列出所有尚未成功执行的理事会提案，包含正在投票表决的、已表决通过但还没到执行时间的。
 
@@ -1361,7 +1303,7 @@ JSON-RPC:
 
 
 
-1.1.16 lookup_accounts_by_name
+1.1.15 lookup_accounts_by_name
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 根据名称查找账号UID。
 普通账户名称目前为yoyo+uid
@@ -1417,6 +1359,75 @@ JSON-RPC:
     }
 
 
+
+
+1.1.16 get_platform_by_account
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+给定一个 uid ，返回对应的账户拥有的平台信息
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+
+
+访问授权限制
+""""""""""""""""""
+无
+
+
+请求参数
+""""""""""""""""
+
+:account:  一个账户 uid
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://47.52.155.181:10011
+    {"id":1, "method":"call", "params":[0, "get_platform_by_account", [224006453]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params": [0, "get_platform_by_account", [224006453]], "id": 1}' http://47.52.155.181:10011/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": {
+        "id": "1.6.4",
+        "owner": 224006453,
+        "name": "dwgMarket",
+        "sequence": 1,
+        "is_valid": true,
+        "total_votes": 0,
+        "url": "www.cad1688.com",
+        "pledge": 1000000000,
+        "pledge_last_update": "2018-04-04T08:38:24",
+        "average_pledge": 0,
+        "average_pledge_last_update": "2018-04-04T08:38:24",
+        "average_pledge_next_update_block": 5712088,
+        "extra_data": "{}",
+        "create_time": "2018-04-04T08:38:24",
+        "last_update_time": "1970-01-01T00:00:00"
+      }
+    }
 
 
 
@@ -1509,83 +1520,10 @@ JSON-RPC:
 
 
 
-
-1.1.18 get_platform_by_account
+1.1.18 lookup_platforms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据指定的平台所有者id,反回平台信息，如果反回空，即指定所有者的平台不存在
+按平台拥有者进行查询，列出当前有效的平台清单。
 
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-
-
-访问授权限制
-""""""""""""""""""
-无
-
-
-请求参数
-""""""""""""""""
-
-:account:   uid
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://47.52.155.181:10011
-    {"id":1, "method":"call", "params":[0, "get_platform_by_account", [224006453]]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params": [0, "get_platform_by_account", [224006453]], "id": 1}' http://47.52.155.181:10011/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-    {
-        "id": 1,
-        "jsonrpc": "2.0",
-        "result":
-        {
-            "id": "1.6.4",
-            "owner": 224006453,
-            "name": "dwgMarket",
-            "sequence": 1,
-            "is_valid": true,
-            "total_votes": 0,
-            "url": "www.cad1688.com",
-            "pledge": 1000000000,
-            "pledge_last_update": "2018-04-04T08:38:24",
-            "average_pledge": 0,
-            "average_pledge_last_update": "2018-04-04T08:38:24",
-            "average_pledge_next_update_block": 5712088,
-            "extra_data": "{}",
-            "create_time": "2018-04-04T08:38:24",
-            "last_update_time": "1970-01-01T00:00:00"
-        }
-    }
-
-
-
-
-
-1.1.19 lookup_platforms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据uid列表 查询平台
 
 支持格式
 """"""""""""""""
@@ -1675,7 +1613,7 @@ JSON-RPC:
 
 
 
-1.1.20 get_platform_count
+1.1.19 get_platform_count
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 返回平台总数量
 
@@ -1730,9 +1668,13 @@ JSON-RPC:
 
 
 
-1.1.21 get_assets
+1.1.20 get_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据一组资产id获取资产列表
+给定一组资产 id ，返回对应的资产的详细信息。
+
+
+参数：
+asset_ids 一组资产 id
 
 支持格式
 """"""""""""""""
@@ -1778,39 +1720,45 @@ JSON-RPC:
 ::
 
     {
-        "id": 1,
-        "jsonrpc": "2.0",
-        "result": [
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": [
         {
-            "id": "1.3.0",
+          "id": "1.3.0",
+          "asset_id": 0,
+          "symbol": "YOYO",
+          "precision": 5,
+          "issuer": 1264,
+          "options": {
+            "max_supply": "200000000000000",
+            "market_fee_percent": 0,
+            "max_market_fee": "1000000000000000",
+            "issuer_permissions": 0,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": ""
+          },
+          "dynamic_asset_data_id": "2.2.0",
+          "dynamic_asset_data": {
+            "id": "2.2.0",
             "asset_id": 0,
-            "symbol": "YOYO",
-            "precision": 5,
-            "issuer": 1264,
-            "options":
-            {
-                "max_supply": "200000000000000",
-                "market_fee_percent": 0,
-                "max_market_fee": "1000000000000000",
-                "issuer_permissions": 0,
-                "flags": 0,
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": ""
-            },
-            "dynamic_asset_data_id": "2.3.0"
-        }]
+            "current_supply": "106899730634997",
+            "accumulated_fees": 0
+          }
+        }
+      ]
     }
 
+    返回结果中的 dynamic_asset_data 字段包括资产动态数据明细。
 
 
 
-
-1.1.22 list_assets
+1.1.21 list_assets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据资产符号名查询资产列表
+分页查询资产详细信息。返回结果按资产代码的 ASCII 码顺序排序。
 
 支持格式
 """"""""""""""""
@@ -1830,12 +1778,12 @@ WebSocket; JSON-RPC
 请求参数
 """"""""""""""""
 
-:lower_bound_symbol:   要检索的符号名称的下限，设为 "" 则从头开始查 例如：["250926091"]
-:limit:   限制要获取的资产的最大数量（不得超过100）
+:lower_bound_symbol:   以此作为起始代码开始查询
+:limit:   返回数量限制，最多不能超过 101
 
 注意事项
 """"""""""""""""
-查询到的资产实际只有YOYO可用。
+无
 
 调用样例及调试工具
 """""""""""""""""""""""""""""""""
@@ -1843,12 +1791,12 @@ WebSocket:
 ::
 
     wscat -c ws://47.52.155.181:10011
-    {"id":1, "method":"call", "params":[0, "list_assets", [0,5]]}
+    {"id":1, "method":"call", "params":[0, "list_assets", ["YOY",4]]}
 
 JSON-RPC:
 ::
 
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params": [0, "list_assets", [0,5]], "id": 1}' http://47.52.155.181:10011/rpc
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params": [0, "list_assets", ["YOY",4]], "id": 1}' http://47.52.155.181:10011/rpc
 
 
 返回结果
@@ -1856,81 +1804,122 @@ JSON-RPC:
 ::
 
     {
-        "id": 1,
-        "jsonrpc": "2.0",
-        "result": [
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": [
         {
-            "id": "1.3.1",
-            "asset_id": 1,
-            "symbol": "BTC",
-            "precision": 8,
-            "issuer": 236542328,
-            "options":
-            {
-                "max_supply": "2100000000000",
-                "market_fee_percent": 100,
-                "max_market_fee": 100000,
-                "issuer_permissions": 79,
-                "flags": 0,
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": ""
-            },
-            "dynamic_asset_data_id": "2.3.1"
+          "id": "1.3.91",
+          "asset_id": 91,
+          "symbol": "YOYES",
+          "precision": 2,
+          "issuer": 215074501,
+          "options": {
+            "max_supply": 1200,
+            "market_fee_percent": 0,
+            "max_market_fee": 1200,
+            "issuer_permissions": 79,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": ""
+          },
+          "dynamic_asset_data_id": "2.2.91",
+          "dynamic_asset_data": {
+            "id": "2.2.91",
+            "asset_id": 91,
+            "current_supply": 0,
+            "accumulated_fees": 0
+          }
         },
         {
-            "id": "1.3.0",
+          "id": "1.3.130",
+          "asset_id": 130,
+          "symbol": "YOYIO",
+          "precision": 2,
+          "issuer": 254208024,
+          "options": {
+            "max_supply": 1258000000,
+            "market_fee_percent": 0,
+            "max_market_fee": 1258000000,
+            "issuer_permissions": 79,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": "环保节能"
+          },
+          "dynamic_asset_data_id": "2.2.130",
+          "dynamic_asset_data": {
+            "id": "2.2.130",
+            "asset_id": 130,
+            "current_supply": 1258000000,
+            "accumulated_fees": 0
+          }
+        },
+        {
+          "id": "1.3.0",
+          "asset_id": 0,
+          "symbol": "YOYO",
+          "precision": 5,
+          "issuer": 1264,
+          "options": {
+            "max_supply": "200000000000000",
+            "market_fee_percent": 0,
+            "max_market_fee": "1000000000000000",
+            "issuer_permissions": 0,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": ""
+          },
+          "dynamic_asset_data_id": "2.2.0",
+          "dynamic_asset_data": {
+            "id": "2.2.0",
             "asset_id": 0,
-            "symbol": "YOYO",
-            "precision": 5,
-            "issuer": 1264,
-            "options":
-            {
-                "max_supply": "200000000000000",
-                "market_fee_percent": 0,
-                "max_market_fee": "1000000000000000",
-                "issuer_permissions": 0,
-                "flags": 0,
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": ""
-            },
-            "dynamic_asset_data_id": "2.3.0"
+            "current_supply": "106899950291573",
+            "accumulated_fees": 0
+          }
         },
         {
-            "id": "1.3.2",
+          "id": "1.3.2",
+          "asset_id": 2,
+          "symbol": "YOYOW",
+          "precision": 5,
+          "issuer": 25638,
+          "options": {
+            "max_supply": "1000000000000",
+            "market_fee_percent": 0,
+            "max_market_fee": "1000000000000",
+            "issuer_permissions": 79,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": ""
+          },
+          "dynamic_asset_data_id": "2.2.2",
+          "dynamic_asset_data": {
+            "id": "2.2.2",
             "asset_id": 2,
-            "symbol": "YOYOW",
-            "precision": 5,
-            "issuer": 25638,
-            "options":
-            {
-                "max_supply": "1000000000000",
-                "market_fee_percent": 0,
-                "max_market_fee": "1000000000000",
-                "issuer_permissions": 79,
-                "flags": 0,
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": ""
-            },
-            "dynamic_asset_data_id": "2.3.2"
-        }]
+            "current_supply": 0,
+            "accumulated_fees": 0
+          }
+        }
+      ]
     }
 
 
 
 
-
-1.1.23 lookup_asset_symbols
+1.1.22 lookup_asset_symbols
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-按符号获取资产列表
+给定一组资产代码或 id ，返回对应的资产的详细信息。
 
 支持格式
 """"""""""""""""
@@ -1950,7 +1939,7 @@ WebSocket; JSON-RPC
 请求参数
 """"""""""""""""
 
-:symbols_or_ids:   数组形式，要检索的资产的符号或字符串化ID，例如：["YOYO"] 或者 [0]
+:symbols_or_ids:   数组形式，要检索的资产的符号代码或ID，例如：["YOYO"] 或者 [0]
 
 注意事项
 """"""""""""""""
@@ -1976,37 +1965,42 @@ JSON-RPC:
 ::
 
     {
-        "id": 1,
-        "jsonrpc": "2.0",
-        "result": [
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": [
         {
-            "id": "1.3.0",
+          "id": "1.3.0",
+          "asset_id": 0,
+          "symbol": "YOYO",
+          "precision": 5,
+          "issuer": 1264,
+          "options": {
+            "max_supply": "200000000000000",
+            "market_fee_percent": 0,
+            "max_market_fee": "1000000000000000",
+            "issuer_permissions": 0,
+            "flags": 0,
+            "whitelist_authorities": [],
+            "blacklist_authorities": [],
+            "whitelist_markets": [],
+            "blacklist_markets": [],
+            "description": ""
+          },
+          "dynamic_asset_data_id": "2.2.0",
+          "dynamic_asset_data": {
+            "id": "2.2.0",
             "asset_id": 0,
-            "symbol": "YOYO",
-            "precision": 5,
-            "issuer": 1264,
-            "options":
-            {
-                "max_supply": "200000000000000",
-                "market_fee_percent": 0,
-                "max_market_fee": "1000000000000000",
-                "issuer_permissions": 0,
-                "flags": 0,
-                "whitelist_authorities": [],
-                "blacklist_authorities": [],
-                "whitelist_markets": [],
-                "blacklist_markets": [],
-                "description": ""
-            },
-            "dynamic_asset_data_id": "2.3.0"
-        }]
+            "current_supply": "106900048605605",
+            "accumulated_fees": 0
+          }
+        }
+      ]
     }
-
 
 History API
 ----------------
 
-1.3.1 get_relative_account_history
+1.2.1 get_relative_account_history
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 获取账户历史。

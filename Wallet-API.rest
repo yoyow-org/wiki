@@ -156,7 +156,7 @@ WebSocket:
 ::
 
     wscat -c ws://localhost:8091
-    {{"id":1, "method":"call", "params":[0,"suggest_brain_key",[]]}
+    {"id":1, "method":"call", "params":[0,"suggest_brain_key",[]]}
 
 JSON-RPC:
 ::
@@ -178,6 +178,60 @@ JSON-RPC:
       }
     }
 
+
+2.1.3 get_transaction_id
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+返回给定交易的 tx id （交易 ID ，或称交易哈希）
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+:trx: JSON格式的完整交易
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0,"get_transaction_id",[{"operations":[[0,{"fee":{"total":{"amount":100000,"asset_id":0}},"from":250926091,"to":223331844,"amount":{"amount":100000,"asset_id":0},"extensions":{}}]]}]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0,"suggest_brain_key",[{"operations":[[0,{"fee":{"total":{"amount":100000,"asset_id":0}},"from":250926091,"to":223331844,"amount":{"amount":100000,"asset_id":0},"extensions":{}}]]}]], "id": 1}' http://localhost:8091
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": "5ea3a6ee9f030472f83fb436836b602a3a5ed6a5"
+    }
 
 
 2.2 查询类 API
@@ -1042,7 +1096,7 @@ JSON-RPC:
 
 2.2.8 get_committee_member
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-获取理事会信息。
+获取理事成员信息。
 
 支持格式
 """"""""""""""""
@@ -1268,6 +1322,488 @@ JSON-RPC:
       "jsonrpc": "2.0",
       "result": []
     }
+
+
+
+2.2.11 get_platform_count
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+获取网络上平台的总数量
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+无
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "get_platform_count", []]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "get_platform_count", []], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": 6
+    }
+
+
+2.2.12 get_platform
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+根据平台所有人（owner）账号，获取平台对象信息
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:owner_account:  平台所有人账号
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "get_platform", ["250926091"]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "update_committee_account", [0, "get_platform", ["250926091"]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": {
+        "id": "1.6.3",
+        "owner": 250926091,
+        "name": "NoPlatform",
+        "sequence": 1,
+        "is_valid": true,
+        "total_votes": 0,
+        "url": "www.example2.com",
+        "pledge": 1000000000,
+        "pledge_last_update": "2018-04-03T09:30:48",
+        "average_pledge": 396825,
+        "average_pledge_last_update": "2018-04-03T09:34:48",
+        "average_pledge_next_update_block": 5684416,
+        "extra_data": "{}",
+        "create_time": "2018-04-03T09:30:48",
+        "last_update_time": "2018-04-03T09:34:48"
+      }
+    }
+
+2.2.13 list_platforms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+按平台拥有者进行查询，列出当前有效的平台清单。
+
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:lowerbound:  以此作为起始 uid 开始查询，设为 0 则从头开始查
+:limit:  返回数量限制，最多不能超过 100
+:order_by:   排序类型。取值范围[0,1,2]。 0:按uid由大到小排序；1:按得票数从多到少排序；2:按抵押从多到少排序
+
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "list_platforms", [0,5,1]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "list_platforms", [0, "list_platforms", [0,5,1]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": [
+        {
+          "id": "1.6.0",
+          "owner": 217895094,
+          "name": "test-yoyow",
+          "sequence": 1,
+          "is_valid": true,
+          "total_votes": 0,
+          "url": "http://demo.yoyow.org/",
+          "pledge": 1000000000,
+          "pledge_last_update": "2018-02-10T01:03:57",
+          "average_pledge": 176601774,
+          "average_pledge_last_update": "2018-02-11T06:49:12",
+          "average_pledge_next_update_block": 4562164,
+          "extra_data": "{\"login\":\"http://demo.yoyow.org:3000/authLogin\"}",
+          "create_time": "2018-02-10T01:03:57",
+          "last_update_time": "2018-02-11T06:49:12"
+        },
+        {
+          "id": "1.6.5",
+          "owner": 223331844,
+          "name": "baidu",
+          "sequence": 1,
+          "is_valid": true,
+          "total_votes": 0,
+          "url": "",
+          "pledge": 1000000000,
+          "pledge_last_update": "2018-04-16T02:52:36",
+          "average_pledge": 0,
+          "average_pledge_last_update": "2018-04-16T02:52:36",
+          "average_pledge_next_update_block": 6050467,
+          "extra_data": "",
+          "create_time": "2018-04-16T02:52:36",
+          "last_update_time": "1970-01-01T00:00:00"
+        },
+        {
+          "id": "1.6.4",
+          "owner": 224006453,
+          "name": "dwgMarket",
+          "sequence": 1,
+          "is_valid": true,
+          "total_votes": 0,
+          "url": "www.cad1688.com",
+          "pledge": 1000000000,
+          "pledge_last_update": "2018-04-04T08:38:24",
+          "average_pledge": 0,
+          "average_pledge_last_update": "2018-04-04T08:38:24",
+          "average_pledge_next_update_block": 5712088,
+          "extra_data": "{}",
+          "create_time": "2018-04-04T08:38:24",
+          "last_update_time": "1970-01-01T00:00:00"
+        }
+      ]
+    }
+
+
+
+
+
+2.2.14 get_asset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+根据给定的资产代码或者 id ，返回资产详细信息。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:asset_name_or_id:  资产符号或者资产id
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "get_asset", [ 3]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "get_asset", [ 3]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+  {
+    "id": "1.3.3",
+    "asset_id": 3,
+    "symbol": "WOWO",
+    "precision": 4,
+    "issuer": 223331844,
+    "options": {
+      "max_supply": "1000000000000000",
+      "market_fee_percent": 0,
+      "max_market_fee": "1000000000000000",
+      "issuer_permissions": 79,
+      "flags": 0,
+      "whitelist_authorities": [],
+      "blacklist_authorities": [],
+      "whitelist_markets": [],
+      "blacklist_markets": [],
+      "description": ""
+    },
+    "dynamic_asset_data_id": "2.3.3"
+  }
+
+
+2.2.15 list_assets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+分页查询资产详细信息。
+
+
+返回结果按资产代码的 ASCII 码顺序排序
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+无
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+无
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "list_assets", ["YOY", 4]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "list_assets", ["YOY", 4]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+  {
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": [
+      {
+        "id": "1.3.91",
+        "asset_id": 91,
+        "symbol": "YOYES",
+        "precision": 2,
+        "issuer": 215074501,
+        "options": {
+          "max_supply": 1200,
+          "market_fee_percent": 0,
+          "max_market_fee": 1200,
+          "issuer_permissions": 79,
+          "flags": 0,
+          "whitelist_authorities": [],
+          "blacklist_authorities": [],
+          "whitelist_markets": [],
+          "blacklist_markets": [],
+          "description": "卢俊义"
+        },
+        "dynamic_asset_data_id": "2.2.91",
+        "dynamic_asset_data": {
+          "id": "2.2.91",
+          "asset_id": 91,
+          "current_supply": 0,
+          "accumulated_fees": 0
+        }
+      },
+      {
+        "id": "1.3.130",
+        "asset_id": 130,
+        "symbol": "YOYIO",
+        "precision": 2,
+        "issuer": 254208024,
+        "options": {
+          "max_supply": 1258000000,
+          "market_fee_percent": 0,
+          "max_market_fee": 1258000000,
+          "issuer_permissions": 79,
+          "flags": 0,
+          "whitelist_authorities": [],
+          "blacklist_authorities": [],
+          "whitelist_markets": [],
+          "blacklist_markets": [],
+          "description": "环保节能"
+        },
+        "dynamic_asset_data_id": "2.2.130",
+        "dynamic_asset_data": {
+          "id": "2.2.130",
+          "asset_id": 130,
+          "current_supply": 1258000000,
+          "accumulated_fees": 0
+        }
+      },
+      {
+        "id": "1.3.0",
+        "asset_id": 0,
+        "symbol": "YOYO",
+        "precision": 5,
+        "issuer": 1264,
+        "options": {
+          "max_supply": "200000000000000",
+          "market_fee_percent": 0,
+          "max_market_fee": "1000000000000000",
+          "issuer_permissions": 0,
+          "flags": 0,
+          "whitelist_authorities": [],
+          "blacklist_authorities": [],
+          "whitelist_markets": [],
+          "blacklist_markets": [],
+          "description": ""
+        },
+        "dynamic_asset_data_id": "2.2.0",
+        "dynamic_asset_data": {
+          "id": "2.2.0",
+          "asset_id": 0,
+          "current_supply": "106901076031525",
+          "accumulated_fees": 0
+        }
+      },
+      {
+        "id": "1.3.2",
+        "asset_id": 2,
+        "symbol": "YOYOW",
+        "precision": 5,
+        "issuer": 25638,
+        "options": {
+          "max_supply": "1000000000000",
+          "market_fee_percent": 0,
+          "max_market_fee": "1000000000000",
+          "issuer_permissions": 79,
+          "flags": 0,
+          "whitelist_authorities": [],
+          "blacklist_authorities": [],
+          "whitelist_markets": [],
+          "blacklist_markets": [],
+          "description": ""
+        },
+        "dynamic_asset_data_id": "2.2.2",
+        "dynamic_asset_data": {
+          "id": "2.2.2",
+          "asset_id": 2,
+          "current_supply": 0,
+          "accumulated_fees": 0
+        }
+      }
+    ]
+  }
+
+
+
+
 2.3 钱包/私钥管理类 API
 ---------------------------------------
 
@@ -2509,7 +3045,7 @@ WebSocket; JSON-RPC
 :from:  领取账号（UID或昵称）
 :to:  接收账号（UID或昵称）
 :amount:   领取金额
-:asset_symbol: 领取币种
+:asset_symbol: 领取币种( 币种只能是 YOYO )
 :time:  指定时间，例如："2018-04-16T02:44:00" ，该时间为UTC时间，且不得早于当前链上新出块的时间5分钟。
 :broadcast:  是否广播
 
@@ -2605,7 +3141,7 @@ WebSocket; JSON-RPC
 :from:  领取账号（UID或昵称）
 :to:  接收账号（UID或昵称）
 :amount:   领取金额
-:asset_symbol: 领取币种
+:asset_symbol: 领取币种( 币种只能是 YOYO )
 :broadcast:  是否广播
 
 注意事项
@@ -2701,9 +3237,9 @@ WebSocket; JSON-RPC
 :owner_account:  创建者账号
 :name:  平台名称
 :pledge_amount:   抵押数量，当前不得少于10000 YOYO
-:pledge_asset_symbol: 抵押资产符号（只能抵押YOYO）
-:url: 平台的地址URL
-:extra_data:  扩展信息（可以是平台提供的api访问接口）
+:pledge_asset_symbol: 抵押币种（YOYO）
+:url: 平台链接
+:extra_data:  平台额外数据
 :broadcast:  是否广播
 
 注意事项
@@ -2764,251 +3300,7 @@ JSON-RPC:
 
 
 
-2.4.12 get_platform
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据平台所有人（owner）账号，获取平台对象信息
-
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-所需密钥权限
-""""""""""""""""""
-无
-
-访问授权限制
-""""""""""""""""""
-| 访问级别: 普通接口
-| 频次限制: 是
-
-
-请求参数
-""""""""""""""""
-
-:owner_account:  平台所有人账号
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "get_platform", ["250926091"]]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "update_committee_account", [0, "get_platform", ["250926091"]], "id": 1}' http://localhost:8091/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-    {
-      "id": 1,
-      "jsonrpc": "2.0",
-      "result": {
-        "id": "1.6.3",
-        "owner": 250926091,
-        "name": "NoPlatform",
-        "sequence": 1,
-        "is_valid": true,
-        "total_votes": 0,
-        "url": "www.example2.com",
-        "pledge": 1000000000,
-        "pledge_last_update": "2018-04-03T09:30:48",
-        "average_pledge": 396825,
-        "average_pledge_last_update": "2018-04-03T09:34:48",
-        "average_pledge_next_update_block": 5684416,
-        "extra_data": "{}",
-        "create_time": "2018-04-03T09:30:48",
-        "last_update_time": "2018-04-03T09:34:48"
-      }
-    }
-
-
-
-
-2.4.13 get_platform_count
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-获取网络上平台的总数量
-
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-所需密钥权限
-""""""""""""""""""
-无
-
-访问授权限制
-""""""""""""""""""
-| 访问级别: 普通接口
-| 频次限制: 是
-
-
-请求参数
-""""""""""""""""
-
-无
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "get_platform_count", []]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "get_platform_count", []], "id": 1}' http://localhost:8091/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-    {
-      "id": 1,
-      "jsonrpc": "2.0",
-      "result": 6
-    }
-
-
-
-2.4.14 list_platforms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-列出当前有效的平台清单，无论得票或者抵押有多少。
-
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-所需密钥权限
-""""""""""""""""""
-无
-
-访问授权限制
-""""""""""""""""""
-| 访问级别: 普通接口
-| 频次限制: 是
-
-
-请求参数
-""""""""""""""""
-
-:lowerbound:  以此作为起始 uid 开始查询，设为 0 则从头开始查
-:limit:  返回数量限制，最多不能超过 100
-:order_by:   排序类型。取值范围[0,1,2]。 0:按uid由大到小排序；1:按得票数从多到少排序；2:按抵押从多到少排序
-
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "list_platforms", [0,5,1]]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "list_platforms", [0, "list_platforms", [0,5,1]], "id": 1}' http://localhost:8091/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-    {
-      "id": 1,
-      "jsonrpc": "2.0",
-      "result": [
-        {
-          "id": "1.6.0",
-          "owner": 217895094,
-          "name": "test-yoyow",
-          "sequence": 1,
-          "is_valid": true,
-          "total_votes": 0,
-          "url": "http://demo.yoyow.org/",
-          "pledge": 1000000000,
-          "pledge_last_update": "2018-02-10T01:03:57",
-          "average_pledge": 176601774,
-          "average_pledge_last_update": "2018-02-11T06:49:12",
-          "average_pledge_next_update_block": 4562164,
-          "extra_data": "{\"login\":\"http://demo.yoyow.org:3000/authLogin\"}",
-          "create_time": "2018-02-10T01:03:57",
-          "last_update_time": "2018-02-11T06:49:12"
-        },
-        {
-          "id": "1.6.5",
-          "owner": 223331844,
-          "name": "baidu",
-          "sequence": 1,
-          "is_valid": true,
-          "total_votes": 0,
-          "url": "",
-          "pledge": 1000000000,
-          "pledge_last_update": "2018-04-16T02:52:36",
-          "average_pledge": 0,
-          "average_pledge_last_update": "2018-04-16T02:52:36",
-          "average_pledge_next_update_block": 6050467,
-          "extra_data": "",
-          "create_time": "2018-04-16T02:52:36",
-          "last_update_time": "1970-01-01T00:00:00"
-        },
-        {
-          "id": "1.6.4",
-          "owner": 224006453,
-          "name": "dwgMarket",
-          "sequence": 1,
-          "is_valid": true,
-          "total_votes": 0,
-          "url": "www.cad1688.com",
-          "pledge": 1000000000,
-          "pledge_last_update": "2018-04-04T08:38:24",
-          "average_pledge": 0,
-          "average_pledge_last_update": "2018-04-04T08:38:24",
-          "average_pledge_next_update_block": 5712088,
-          "extra_data": "{}",
-          "create_time": "2018-04-04T08:38:24",
-          "last_update_time": "1970-01-01T00:00:00"
-        }
-      ]
-    }
-
-
-
-
-2.4.15 update_platform
+2.4.12 update_platform
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 修改平台信息。
 
@@ -3034,14 +3326,17 @@ WebSocket; JSON-RPC
 """"""""""""""""
 
 :platform_account:  账号（UID或昵称）
-:name: 新的平台名称
+:name: 新的平台名称，不需修改则输入 null
 :pledge_amount:  新的抵押金额，不需修改则输入 null
 :pledge_asset_symbol:   新的抵押币种（YOYO），不需修改则输入 null
 :url: 新的介绍链接，不需修改则输入 null
-:extra_data:  新的扩展数据
+:extra_data:  新的平台额外数据
 :broadcast:  是否广播
 
-如果不需修改请置为null
+注：
+抵押金额和币种必须同时出现或者同时不出现，目前币种只能是 YOYO。
+抵押金额为 0 则为关闭平台
+
 
 注意事项
 """"""""""""""""
@@ -3103,9 +3398,9 @@ JSON-RPC:
 
 
 
-2.4.16 update_platform_votes
+2.4.13 update_platform_votes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-为平台投票（目前投票，不对平台有影响）
+为平台投票
 
 支持格式
 """"""""""""""""
@@ -3129,8 +3424,8 @@ WebSocket; JSON-RPC
 """"""""""""""""
 
 :voting_account:  投票人账号（UID或昵称）
-:platforms_to_add:  增加支持的平台清单
-:platforms_to_remove:   去除支持的平台清单
+:platforms_to_add:  增加支持的平台清单（UID或昵称）
+:platforms_to_remove:   移除支持的平台清单（UID或昵称）
 :broadcast:  是否广播
 
 latforms_to_add，platforms_to_remove 两个清单可以都为空，表示刷新投票意向。
@@ -3196,7 +3491,182 @@ JSON-RPC:
 
 
 
-2.4.17 create_asset
+
+2.4.14 account_auth_platform
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+账户对平台授权。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+主控密钥
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:account:  授权账号（UID或昵称）
+:platform_owner:  平台所有者账号（UID或昵称）
+:broadcast:  是否广播
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "account_auth_platform", ["250926091", "223331844", true]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "account_auth_platform", ["250926091", "223331844", true]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": {
+        "ref_block_num": 26612,
+        "ref_block_prefix": 1858930703,
+        "expiration": "2018-07-05T02:34:57",
+        "operations": [
+          [
+            23,
+            {
+              "fee": {
+                "total": {
+                  "amount": 10000,
+                  "asset_id": 0
+                },
+                "options": {
+                  "from_csaf": {
+                    "amount": 10000,
+                    "asset_id": 0
+                  }
+                }
+              },
+              "uid": 223331844,
+              "platform": 250926091
+            }
+          ]
+        ],
+        "signatures": [
+          "200ee643c33b074ad002bc6f4b477ff48dbee76bd3aa1c3c5b3a4c064b1f39581e61f93e957128c1c20737eafa2e09c56f6d0f97468676cfa2a15d04f50da0774c"
+        ]
+      }
+    }
+
+
+
+
+2.4.15 account_cancel_auth_platform
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+账户取消对平台授权。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+主控密钥
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+:account:  授权账号（UID或昵称）
+:platform_owner:  平台所有者账号（UID或昵称）
+:broadcast:  是否广播
+
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "account_cancel_auth_platform", ["250926091", "223331844", true]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "account_cancel_auth_platform", ["250926091", "223331844", true], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "id": 1,
+      "jsonrpc": "2.0",
+      "result": {
+        "ref_block_num": 26736,
+        "ref_block_prefix": 2510951750,
+        "expiration": "2018-07-05T02:41:09",
+        "operations": [
+          [
+            24,
+            {
+              "fee": {
+                "total": {
+                  "amount": 10000,
+                  "asset_id": 0
+                },
+                "options": {
+                  "from_csaf": {
+                    "amount": 10000,
+                    "asset_id": 0
+                  }
+                }
+              },
+              "uid": 223331844,
+              "platform": 250926091
+            }
+          ]
+        ],
+        "signatures": [
+          "2021240ab7c321fad009693c8a598363aa840fcde0f07cc54d72b8c3b7d6e116d4357127328faea805aff7d632fb0a09e2ce6ac203d4a97b2dd30c139548939d38"
+        ]
+      }
+    }
+
+
+2.4.16 create_asset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 创建资产，目前需要300000 YOYO
 
@@ -3224,7 +3694,8 @@ WebSocket; JSON-RPC
 :issuer:  创建人UID
 :symbol:  要创建资产的符号
 :precision:   精度（保留几位小数）
-:common: 选项
+:common: 选项，详见下文选项参数结构
+:initial_supply:  初始流通量为整型表示，即：实际金额 = initial_supply / ( 10 ^ precision )
 :broadcast:  是否广播
 
 其中选项参数结构
@@ -3233,9 +3704,9 @@ WebSocket; JSON-RPC
           // 该资产在任何给定时间可能存在的最大供应量。 这可以和 GRAPHENE_MAX_SHARE_SUPPLY 一样大 
           // 特别说明：该最大供应量为最小单位Token的数量，比如发行的最大供应量为30000，精度设为2，则实际的供应量为30000/(10^2)=300个Token，最小的交易单位为0.01。
           max_supply = GRAPHENE_MAX_SHARE_SUPPLY;
-          // 当这个资产在市场上交易时，这个交易总额的百分比将被提取并支付给发行人。 这是一个固定点值，代表百分之一百，即在此字段中值为100意味着此资产的市场交易收取1％的费用。
+          // 当这个资产在市场上交易时，这个交易总额的百分比将被提取并支付给发行人。 这是一个固定点值，代表百分之一百，即在此字段中值为100意味着此资产的市场交易收取1％的费用。（预留字段，暂未使用，必须为 0 ）
           market_fee_percent = 0;
-          // 以交易量的 market_fee_percent计算的市场费用限制为此值
+          // 以交易量的 market_fee_percent计算的市场费用限制为此值。 （预留字段，暂未使用，必须为 0 ）
           max_market_fee = GRAPHENE_MAX_SHARE_SUPPLY;
 
           // 发行人有权更新的标志（可用标志有：charge_market_fee|white_list|override_authority|transfer_restricted|disable_confidential）
@@ -3268,12 +3739,12 @@ WebSocket:
 ::
 
     wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "create_asset", ["250926091", "ZOZO", 4, {"max_supply":300000,}, true]]}
+    {"id":1, "method":"call", "params":[0, "create_asset", ["250926091","TOTOTO", 4, {"max_supply":300000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":4}, 200000, true]]}
 
 JSON-RPC:
 ::
 
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "create_asset", ["250926091","ZOZO", 4, {"max_supply":300000,}, true]], "id": 1}' http://localhost:8091/rpc
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "create_asset", ["250926091","TOTOTO", 4, {"max_supply":300000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":4}, 200000, true]], "id": 1}' http://localhost:8091/rpc
 
 
 返回结果
@@ -3281,114 +3752,49 @@ JSON-RPC:
 ::
 
     {
-      "ref_block_num": 5023,
-      "ref_block_prefix": 1223221831,
-      "expiration": "2018-05-24T09:04:54",
+      "ref_block_num": 57735,
+      "ref_block_prefix": 998946957,
+      "expiration": "2018-07-06T04:31:06",
       "operations": [[
           25,{
             "fee": {
               "total": {
-                "amount": "30000000000",
+                "amount": 50000000,
                 "asset_id": 0
               }
             },
-            "issuer": 223331844,
-            "symbol": "ZOZO",
+            "issuer": 250926091,
+            "symbol": "TOTOTO",
             "precision": 4,
             "common_options": {
               "max_supply": 300000,
               "market_fee_percent": 0,
-              "max_market_fee": "1000000000000000",
-              "issuer_permissions": 79,
+              "max_market_fee": 0,
+              "issuer_permissions": 4,
               "flags": 0,
               "whitelist_authorities": [],
               "blacklist_authorities": [],
               "whitelist_markets": [],
               "blacklist_markets": [],
               "description": ""
+            },
+            "extensions": {
+              "initial_supply": 200000
             }
           }
         ]
       ],
       "signatures": [
-         "2028f6563dbf6c570d3aa29154963f7ed55649a8e9ebf86d9464c031d8ddce9fac683a71af40142559939ee711648ee730c65bcefb8b3328e0b16d3029584e4c24"
+        "1f32dc80319019ff0c5eff27c9d1e15c7371fcc2825969b8e42a6429fb44c2ac3a75344b382e00c9f7f4af06600b0aff93aa380bf81b94f62b1abe0bfc807fcb6f"
       ]
     }
 
 
-2.4.18 get_asset
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-根据资产符号或ID区取资产对象
-
-支持格式
-""""""""""""""""
-JSON 
-
-请求方式
-""""""""""""""""
-WebSocket; JSON-RPC
-
-所需密钥权限
-""""""""""""""""""
-无
-
-访问授权限制
-""""""""""""""""""
-| 访问级别: 普通接口
-| 频次限制: 是
-
-
-请求参数
-""""""""""""""""
-
-:asset_name_or_id:  资产符号或者资产id
-
-注意事项
-""""""""""""""""
-无
-
-调用样例及调试工具
-"""""""""""""""""""""""""""""""""
-WebSocket:
-::
-
-    wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "get_asset", [ 3]]}
-
-JSON-RPC:
-::
-
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "get_asset", [ 3]], "id": 1}' http://localhost:8091/rpc
-
-
-返回结果
-""""""""""""""""
-::
-
-  {
-    "id": "1.3.3",
-    "asset_id": 3,
-    "symbol": "WOWO",
-    "precision": 4,
-    "issuer": 223331844,
-    "options": {
-      "max_supply": "1000000000000000",
-      "market_fee_percent": 0,
-      "max_market_fee": "1000000000000000",
-      "issuer_permissions": 79,
-      "flags": 0,
-      "whitelist_authorities": [],
-      "blacklist_authorities": [],
-      "whitelist_markets": [],
-      "blacklist_markets": [],
-      "description": ""
-    },
-    "dynamic_asset_data_id": "2.3.3"
-  }
 
 
 
-2.4.19 update_asset
+
+2.4.17 update_asset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 更新资产信息。
 
@@ -3420,7 +3826,9 @@ WebSocket; JSON-RPC
 
 注意事项
 """"""""""""""""
-无
+只有资产发行人才能使用这个功能。
+
+只有当前流通量为零时，才能修改精度。
 
 调用样例及调试工具
 """""""""""""""""""""""""""""""""
@@ -3478,6 +3886,184 @@ JSON-RPC:
       ]
     }
   }
+
+
+
+2.4.18 enable_allowed_assets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+账户主动启用或停用账户端资产白名单。
+
+该白名单默认为停用状态，停用白名单即 账户可以发送和接收任何资产。
+
+白名单处于启用状态时，该账户只能发送和接收名单内的资产，同时可使用 update_allowed_assets 命令更新白名单。
+
+从停用状态变更为启用状态时，白名单中默认只有“核心资产”，即 YOYO 。
+
+从启用状态停用白名单后，数据清除。重新启用时需重新添加需要的资产。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+需要资产所有者的Active key
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:account:  账号（UID或昵称）
+:enable:  是否启用（ true 为启用， false 为停用 ）
+:broadcast:  是否广播
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "enable_allowed_assets", ["250926091", false, true]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "issue_asset", "250926091", false, true]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+    {
+      "ref_block_num": 56000,
+      "ref_block_prefix": 3273656390,
+      "expiration": "2018-07-06T03:04:21",
+      "operations": [[
+          34,{
+            "fee": {
+              "total": {
+                "amount": 100000,
+                "asset_id": 0
+              },
+              "options": {
+                "from_csaf": {
+                  "amount": 100000,
+                  "asset_id": 0
+                }
+              }
+            },
+            "account": 250926091,
+            "enable": false
+          }
+        ]
+      ],
+      "signatures": [
+        "1f7e06ed28f6017e9a25ee1d165ec1aae330fb87abc9486c264c30f7de2e8d2369077509d61d96df016fbeec55bbd541532b90f35bf2e18278c87369fa87d7158b"
+      ]
+    }
+  
+
+
+2.4.19 update_allowed_assets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+更新账户端资产白名单。
+
+只有白名单处于开启状态时，才能更新。
+不能移除 YOYO 。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+需要资产所有者的Active key
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:account:  账号（UID或昵称）
+:assets_to_add:  添加到白名单的资产清单（资产代码或 id ）
+:assets_to_remove:   从白名单移除的资产清单（资产代码或 id ）
+:broadcast:  是否广播
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "issue_asset", ["250926091", "100000", "WOWO", "memo", true]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "issue_asset", ["250926091", "100000", "WOWO", "memo", true]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+  
+    {
+      "ref_block_num": 56441,
+      "ref_block_prefix": 3725987382,
+      "expiration": "2018-07-06T03:26:24",
+      "operations": [[
+          35,{
+            "fee": {
+              "total": {
+                "amount": 200000,
+                "asset_id": 0
+              },
+              "options": {
+                "from_csaf": {
+                  "amount": 200000,
+                  "asset_id": 0
+                }
+              }
+            },
+            "account": 250926091,
+            "assets_to_add": [
+              3
+            ],
+            "assets_to_remove": []
+          }
+        ]
+      ],
+      "signatures": [
+        "200f4362763eef9a5f0de6c461d2dcde77e665ae5ac2d462c89dd1f4ba22b35b7b21662e306d1e52c530815983f284d79b3191ebd4d3fea43f135aff4e21fe39a3",
+        "1f199078220bf0d6c2fcf28e0bd4fbf9afc1eb7db241997173a469d88d538d36c03c3299136cf42a030810c5adf250be990029391c0ad7ae8268e5bee4850f07bd"
+      ]
+    }
+
 
 2.4.20 issue_asset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3565,3 +4151,186 @@ JSON-RPC:
   }
 
 
+2.4.21 reserve_asset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+销毁自己账户中指定数量的指定资产。
+操作完成后，该资产类型的流通总量相应减少。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+需要资产所有者的Active key
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:from:  账号（UID或昵称）
+:amount:  金额
+:symbol:   币种（资产代码）
+:broadcast:  是否广播
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "reserve_asset", ["250926091", "1000", "WOWO", true]]}
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "reserve_asset", ["250926091", "1000", "WOWO", true]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+    {
+      "ref_block_num": 56703,
+      "ref_block_prefix": 1905534427,
+      "expiration": "2018-07-06T03:39:30",
+      "operations": [[
+          28,{
+            "fee": {
+              "total": {
+                "amount": 10000,
+                "asset_id": 0
+              },
+              "options": {
+                "from_csaf": {
+                  "amount": 10000,
+                  "asset_id": 0
+                }
+              }
+            },
+            "payer": 250926091,
+            "amount_to_reserve": {
+              "amount": 10000000,
+              "asset_id": 3
+            }
+          }
+        ]
+      ],
+      "signatures": [
+        "1f6a2f416a525ae4754a98388cb4464f60f1b77659c5a742d8b76a80d581484ce5681c24aa51c7379acaa8247df49d962cb28b5910e179a7de9c8a48e49fe7cc5a"
+      ]
+    }
+
+
+
+2.4.22 override_transfer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+强制转账。资产发行人强制某账户将一定数量资产转到另一账户。
+
+只有资产发行人才能使用这个功能。
+
+备注用发行人备注私钥加密，转入人可解密备注，转出人不可解密。
+
+支持格式
+""""""""""""""""
+JSON 
+
+请求方式
+""""""""""""""""
+WebSocket; JSON-RPC
+
+所需密钥权限
+""""""""""""""""""
+需要资产发行人的Active key和memo key
+
+访问授权限制
+""""""""""""""""""
+| 访问级别: 普通接口
+| 频次限制: 是
+
+
+请求参数
+""""""""""""""""
+
+:from:  转出人（UID或昵称）
+:to:  转入人（UID或昵称）
+:amount:  金额
+:symbol:   币种（资产代码）
+:memo:  备注（不带备注的话用空串""）
+:broadcast:  是否广播
+
+注意事项
+""""""""""""""""
+无
+
+调用样例及调试工具
+"""""""""""""""""""""""""""""""""
+WebSocket:
+::
+
+    wscat -c ws://localhost:8091
+    {"id":1, "method":"call", "params":[0, "override_transfer", ["216494599", "250926091", 2, "SOSO", "memo", true]]}
+
+
+JSON-RPC:
+::
+
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "override_transfer", ["216494599", "250926091", 2, "SOSO", "memo", true]], "id": 1}' http://localhost:8091/rpc
+
+
+返回结果
+""""""""""""""""
+::
+
+  {
+    "ref_block_num": 61983,
+    "ref_block_prefix": 2781522721,
+    "expiration": "2018-07-06T08:03:30",
+    "operations": [[
+        30,{
+          "fee": {
+            "total": {
+              "amount": 2008984,
+              "asset_id": 0
+            },
+            "options": {
+              "from_csaf": {
+                "amount": 2008984,
+                "asset_id": 0
+              }
+            }
+          },
+          "issuer": 223331844,
+          "from": 216494599,
+          "to": 250926091,
+          "amount": {
+            "amount": 20000,
+            "asset_id": 283
+          },
+          "memo": {
+            "from": "YYW5jiVsASqAyUibUb8awgDapFqfjQJo3SfvTEPJHxir8r3ggVtZU",
+            "to": "YYW8Z8rtp7oEZFJi7Ar9HC4r4d15jXCVTQ2CAosjSnkSFdbc74GJ3",
+            "nonce": "9585190871224727019",
+            "message": "b0e7b1997c2142125c0369c4304a33c1"
+          }
+        }
+      ]
+    ],
+    "signatures": [
+      "20008db33ea71863fc7f4b97763a34e96e8b9d87714b1445d33c34a6b7bb3015c14d0a130c1ee74946c19b5e992c02249872e1bf601ca24380ebef22e5119a2894"
+    ]
+  }
