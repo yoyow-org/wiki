@@ -6,7 +6,7 @@ We here describe how to interface your exchange with the YOYOW blockchain step-b
 
 ### Hardware
 
-The recommended hardware by now is a VPS with 2GB of RAM and 20GB HDD. Single core is OK.
+The recommended hardware by now is a VPS with 2 Cores , 4GB of RAM and 40GB HDD.
 
 Supported platforms:
 * Ubuntu 16.04 LTS 64 bit
