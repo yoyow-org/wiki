@@ -3668,7 +3668,7 @@ JSON-RPC:
 
 2.4.16 create_asset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-创建资产，目前需要300000 YOYO
+创建资产
 
 支持格式
 """"""""""""""""
@@ -3709,7 +3709,7 @@ WebSocket; JSON-RPC
           // 以交易量的 market_fee_percent计算的市场费用限制为此值。 （预留字段，暂未使用，必须为 0 ）
           max_market_fee = GRAPHENE_MAX_SHARE_SUPPLY;
 
-          // 发行人有权更新的标志（可用标志有：charge_market_fee|white_list|override_authority|transfer_restricted|disable_confidential）
+          // 发行人有权更新的标志
           issuer_permissions = UIA_ASSET_ISSUER_PERMISSION_MASK;
           // 此权限上的当前活动标志
           flags = 0;
@@ -3728,6 +3728,20 @@ WebSocket; JSON-RPC
           // 描述该资产的含义/目的的数据，费用将按照描述的大小进行收费。
           string description;
        };
+其中， issuer_permisisons 和 flags 两个字段，是以整数方式表示，该整数转换为二进制后，每一位代表一个权限或者标志。目前定义如下：
+::
+      enum asset_issuer_permission_flags
+         {
+            white_list           = 0x02,    // 白名单，如果启用，则该资产发行人可以控制他人是否可以使用该资产（这里的“使用”包含转账等操作）
+            override_authority   = 0x04,    // 强制转账，如果启用，则该资产发行人可以强制转走或者收回其他人账户里的该类资产
+            transfer_restricted  = 0x08,    // 限制转账，如果启用，则转账的发起者或者接收者必须是该资产发行人
+            issue_asset          = 0x200,   // 发行资产，如果启用，则该资产发行人可以增加一定数量的该类资产到某账户，同时增加该资产的当前流通总量
+            change_max_supply    = 0x400,   // 修改流通量上限，如果启用，则该资产发行人可以修改该资产的流通量上限
+         };
+
+目前尚未使用的位，在 issuer_permissions 和 flags 两个字段中必须为 0 。
+在flags 字段里，某一位如果为 1 ，则表示该资产启用了这一位对应的参数；如果为 0 ，则表示没有启用。
+在issuer_permissions 字段里，如果某一位如果为 0 ，则表示资产发行人可以修改 flags 字段里对应的参数位；如果为 1 ，则表示不可修改。
 
 注意事项
 """"""""""""""""
