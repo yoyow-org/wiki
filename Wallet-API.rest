@@ -3961,6 +3961,7 @@ JSON-RPC:
 返回结果
 """"""""""""""""
 ::
+
     {
       "ref_block_num": 56000,
       "ref_block_prefix": 3273656390,
@@ -3985,7 +3986,11 @@ JSON-RPC:
         ]
       ],
       "signatures": [
-        "1f7e06ed28f6017e9a25ee1d165ec1aae330fb87abc9486c264c30f7de2e8d2369077509d61d96df016fbeec55bbd541532b90f35bf2e18278c87369fa87d7158b"
+  
+  
+  
+  
+  "1f7e06ed28f6017e9a25ee1d165ec1aae330fb87abc9486c264c30f7de2e8d2369077509d61d96df016fbeec55bbd541532b90f35bf2e18278c87369fa87d7158b"
       ]
     }
   
