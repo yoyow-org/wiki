@@ -14,5 +14,6 @@ Welcome to the yoyow-core wiki!
 * [[YOYOW WALLET API|Wallet API]]: YOYOW钱包API说明
 
 ## 见证人（挖矿）相关
+* [[见证人简介 | 一文看懂YOYOW见证人]]
 * [YOYOW见证人教程（Ubuntu版本）](https://mp.weixin.qq.com/s/l4KfKtUUfaCEp9ykIbIByA)
 * [[见证人部署、监控程序教程（docker版）|见证人部署、监控程序教程（docker版）]] Thanks to ety001@steemit
