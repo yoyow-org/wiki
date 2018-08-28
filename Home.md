@@ -17,3 +17,26 @@ Welcome to the yoyow-core wiki!
 * [[见证人简介 | 一文看懂YOYOW见证人]]
 * [YOYOW见证人教程（Ubuntu版本）](https://mp.weixin.qq.com/s/l4KfKtUUfaCEp9ykIbIByA)
 * [[见证人部署、监控程序教程（docker版）|见证人部署、监控程序教程（docker版）]] Thanks to ety001@steemit
+
+
+------------------
+## FAQ
+问：我想注册个平台，请问成本需要多少YOYO
+> 目前至少需要11001个YOYO。其中10000个为平台的抵押；1000个为创建平台的手续费。
+
+问：通过yoyow-wecenter可以方便的搭建自己的问答网站，同时可直接接入YOYOW网络，请问yoyow-wecenter支持自己发行的TOKEN吗？
+> 目前yoyow-wecenter只支持YOYO的发放，并不支持第三方TOKEN。 不过该功能已经在开发中，预计近期会开发支持。
+
+问：平台接入后，如何获得YOYO奖励？
+> 目前平台的激励奖励主要来自两个渠道：1）与YOYOW团队达成商务合作，团队激励YOYO 2)发行自己的TOKEN，对用户进行激励 3）自己购买YOYO 。 
+> 
+> 目前，YOYOW主网会尚未自动分配YOYO，未来择机开放,请保持关注。
+
+问：未来，若平台获得了YOYO奖励，分配比例如何？平台方/用户各获得多少比例？
+> 若平台获得奖励，则平台拥有完全自主的分配权。分配多少给自己的用户，平台可根据具体情况决定。
+
+问：YOYOW主节点程序与cli下载地址是？
+> https://github.com/yoyow-org/yoyow-core/releases
+> 
+> 最新的程序可以在这里下载
+
