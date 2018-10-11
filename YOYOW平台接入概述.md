@@ -94,7 +94,7 @@ YOYOW引入积分，可以减少普通用户小额手续费（内容发布，点
 具体抵押升级平台账号的操作，详见YOYOW中间件[yoyow-middleware](https://github.com/yoyow-org/yoyow-node-sdk/tree/master/middleware#2-%E5%88%9B%E5%BB%BA%E5%B9%B3%E5%8F%B0) 的使用教程。
 
 ### 授权认证
-YOYOW提供标准的OAuth的授权认证。YOYOW提供了中间件来方便平台进行接入，中间件中提供包括签名平台 （sign），签名验证（ verify），以及签名平台返回二维码（signQR）等接口（详见：[《yoyow-middleware》#Auth 相关](https://github.com/yoyow-org/yoyow-node-sdk/tree/master/middleware#2-auth-%E7%9B%B8%E5%85%B3)）。平台可以通过SDK中sign或signQR接口生成绑定链接，verify接口验证用户授权。通过授权，平台可以获得用户的零钱管理权限以及登陆授权。  
+YOYOW提供类似于OAuth的授权认证。YOYOW提供了中间件来方便平台进行接入，中间件中提供包括签名平台 （sign），签名验证（ verify），以及签名平台返回二维码（signQR）等接口（详见：[《yoyow-middleware》#Auth 相关](https://github.com/yoyow-org/yoyow-node-sdk/tree/master/middleware#2-auth-%E7%9B%B8%E5%85%B3)）。平台可以通过SDK中sign或signQR接口生成绑定链接，verify接口验证用户授权。通过授权，平台可以获得用户的零钱管理权限以及登陆授权。  
 授权流程：
 
  ![OAuth 流程](./images/oauth_process.png)
