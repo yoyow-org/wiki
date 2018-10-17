@@ -907,10 +907,10 @@ JSON-RPC:
 
 2.2.7 list_witnesses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-查询指定借出人的币龄租借（借出）清单。
+查询满足条件的所有见证人。
 
 
-结果按借入人  uid 从小到大排序
+按见证人 uid 从小到大排序
 
 支持格式
 """"""""""""""""
@@ -948,12 +948,12 @@ WebSocket:
 ::
 
     wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0,"list_witnesses",["132"]]}
+    {"id":1, "method":"call", "params":[0,"list_witnesses",[209408617, 10, 0]]}
 
 JSON-RPC:
 ::
 
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0,"list_witnesses",["132"]], "id": 1}' http://localhost:8091
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0,"list_witnesses",[209408617, 10, 1]], "id": 1}' http://localhost:8091
 
 
 返回结果
