@@ -41,7 +41,7 @@ An exchange uses an account (or more) for processing deposits/withdrawals.
 
 As of writing, only binaries are available for download ([link](https://github.com/yoyow-org/yoyow-core/releases)). After downloaded, extract the files.
 
-For example:
+Take version 0.2.1 For example:
 ```
 wget https://github.com/yoyow-org/yoyow-core/releases/download/v0.2.1-180313/yoyow-node-v0.2.1-ubuntu-20180313.tgz
 wget https://github.com/yoyow-org/yoyow-core/releases/download/v0.2.1-180313/yoyow-client-v0.2.1-ubuntu-20180313.tgz
