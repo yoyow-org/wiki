@@ -2437,6 +2437,7 @@ JSON-RPC:
 返回结果
 """"""""""""""""
 ::
+
     {
       "ref_block_num": 58457,
       "ref_block_prefix": 2372452101,
@@ -2460,7 +2461,10 @@ JSON-RPC:
         ]
       ],
       "signatures": [
-        "202857a37e91889a1c6124a2e3405eff00647b315aa55db7989334e187a5a92c1f0cb4bb00531fa525e53f26403e8bd323a9e46f8289b0039ed2caeb951f70eb28"
+  
+  
+  
+  "202857a37e91889a1c6124a2e3405eff00647b315aa55db7989334e187a5a92c1f0cb4bb00531fa525e53f26403e8bd323a9e46f8289b0039ed2caeb951f70eb28"
       ]
     }
 
