@@ -2873,12 +2873,12 @@ WebSocket:
 ::
 
     wscat -c ws://localhost:8091
-    {"id":1, "method":"call", "params":[0, "update_witness_votes", ["250926091", "abit", [], true]]}
+    {"id":1, "method":"call", "params":[0, "update_witness_votes", ["250926091", ["abit"], [], true]]}
 
 JSON-RPC:
 ::
 
-    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "update_witness_votes", ["250926091", "abit", [], true]], "id": 1}' http://localhost:8091/rpc
+    curl --data '{"jsonrpc": "2.0", "method": "call", "params":[0, "update_witness_votes", ["250926091", ["abit"], [], true]], "id": 1}' http://localhost:8091/rpc
 
 
 返回结果
