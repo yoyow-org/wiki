@@ -108,7 +108,7 @@ YOYOW提供类似于OAuth的授权认证。YOYOW提供了中间件来方便平�
 ### 资产发行
 媒体可以根据需要发行自己的资产，资产的数量和汇率等可以由自己的需求设定。yoyow平台为设定的资产提供流通和交易的便利。  
 发行的资产暂时通过钱包客户端的create_asset函数操作，需要指定资产的总量，交易的手续费汇率，以及白名单和黑名单等设置。  
-详见：[《YOYOW钱包API》#create_assets](../Wallet%20API#2417-create_asset)。
+详见：[《YOYOW钱包API》#create_assets](../Wallet-API#2417-create_asset)。
 
 ### 用户激励  
 
