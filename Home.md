@@ -56,7 +56,7 @@ Question：How to get YOYO rewards after the platform is integrated ?
 问：未来，若平台获得了YOYO奖励，分配比例如何？平台方/用户各获得多少比例？
 > 若平台获得奖励，则平台拥有完全自主的分配权。分配多少给自己的用户，平台可根据具体情况决定。
 
-Q: In the future, if the platform gets the YOYO rewards, what is the distribution ratio? What is the percentage of the platform side / user each?
+Question: In the future, if the platform gets the YOYO rewards, what is the distribution ratio? What is the percentage of the platform side / user each?
 > If the platform is rewarded, the platform has a completely autonomous distribution rights. The platforms can decide how much is allocated to their own users on a case-by-case basis.
 
 问：YOYOW主节点程序与cli下载地址是？
@@ -64,7 +64,7 @@ Q: In the future, if the platform gets the YOYO rewards, what is the distributio
 > 
 > 最新的程序可以在这里下载
 
-Q: What is download address of the YOYOW master node program and the client?
+Question: What is download address of the YOYOW master node program and the client?
 > https://github.com/yoyow-org/yoyow-core/releases
 >
 > The latest program can be downloaded here.
