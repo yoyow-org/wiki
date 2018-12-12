@@ -341,7 +341,7 @@ http://localhost:3001/api/v1/getPlatformById?uid=217895094
     "pledge_last_update": "2018-02-10T01:03:57", - platform collateral last update time
     "average_pledge": 176601774, - platform average collateral
     "average_pledge_last_update": "2018-02-11T06:49:12", - platform average collateral last update time
-    "average_pledge_next_update_block": 4562164, - latform average collateral next update block number
+    "average_pledge_next_update_block": 4562164, - platform average collateral next update block number
     "extra_data": "{}", - platform extra data 
     "create_time": "2018-02-10T01:03:57", - platform creating time
     "last_update_time": "2018-02-11T06:49:12" - platform latest update date
